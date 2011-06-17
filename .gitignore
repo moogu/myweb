@@ -1,1 +1,3 @@
 war/WEB-INF/classes
+gwt/
+war/WEB-INF/lib/.DS_Store
