@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='mywebapp'>
+	<!-- Inherit the core Web Toolkit stuff. -->
+	<inherits name='com.google.gwt.user.User' />
+
+	<!-- Inherit the default GWT style sheet. -->
+	<inherits name='com.google.gwt.user.theme.standard.Standard' />
+
+	<!-- Other module inherits -->
+	<inherits name='com.extjs.gxt.ui.GXT' />
+	<inherits name='com.extjs.gxt.charts.Chart' />
+
+	<!-- Specify the app entry point class. -->
+	<entry-point class='com.moogu.myweb.client.MyWebEntryPoint' />
+
+	<!-- Specify the paths for translatable code -->
+	<source path='shared' />
+	<source path='client' />
+</module>

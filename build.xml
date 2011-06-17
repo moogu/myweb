@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<project name="myWeb" default="war" basedir=".">
+	
+	<property environment="env"/>
+
+	<property name="build.label" value="Build on ${env.BUILD_ID}, #${env.BUILD_NUMBER}"/>
+	<property name="prod.src" location="src"/>
+	<property name="test.src" location="test/java"/>
+	<property name="prod.classes.dist" location="dist/classes/prod"/>
+	<property name="test.classes.dist" location="dist/classes/test"/>
+	<property name="prod.libs.dir" location="war/WEB-INF/lib"/>  
+	<property name="sql.dir" location="sql"/>
+	<property name="test.reports.dir" location="dist/reports/test"/>
+    <property name="war.dir" location="dist/war"/>
+
+	<path id="prod.compile.libs">
+		   <fileset dir="${prod.libs.dir}"/>    
+	</path>
+	
+	<path id="test.libs">
+		   <fileset dir="lib/test"/>	
+	</path>
+	
+	<path id = "test.classpath">
+		<path refid="prod.compile.libs" />
+		<pathelement location="${prod.classes.dist}"/>
+		<pathelement location="${test.classes.dist}"/>	
+	</path>
+	
+	<target name="clean">
+	        <delete dir="dist" excludes=".svn" includeemptydirs="true"/>
+	</target>
+	
+	<target name="compile" depends="clean">
+		<mkdir dir="${prod.classes.dist}"/>
+	    <javac srcdir="${prod.src}" destdir="${prod.classes.dist}" classpathref="prod.compile.libs" debug="true" nowarn="true" source="1.5" target="1.5" debuglevel="lines,vars,source"/>
+		<copy todir="${prod.classes.dist}">
+			<fileset dir="${prod.src}">
+				<exclude name="**/*.java"/>
+			   	<exclude name="**/doc-files/**/*"/>
+				<exclude name="**/package.html"/>
+				<exclude name="**/.*"/>
+		    </fileset>
+		</copy>
+	</target>
+	
+	<target name="compile_test" depends="compile">
+		<mkdir dir="${test.classes.dist}"/>
+		<javac srcdir="${test.src}" destdir="${test.classes.dist}" encoding="utf-8" source="1.5" target="1.5" nowarn="true" debug="true" debuglevel="lines,vars,source" >
+			 <classpath>
+			 	<path location="${prod.classes.dist}"/>
+			 	<path refid="prod.compile.libs"/>
+			 </classpath>
+		</javac>
+	    <copy todir="${test.classes.dist}">
+	       	<fileset dir="${test.src}">
+	       		<exclude name="**/*.java"/>
+		        <exclude name="**/doc-files/**/*"/>
+	      		<exclude name="**/index.html"/>
+	       		
+		    </fileset>
+		</copy>
+	</target>
+	
+	<target name="gwtc" depends="compile" description="GWT compile to JavaScript">
+		<java failonerror="true" fork="true" classname="com.google.gwt.dev.Compiler" >
+			<classpath>
+				 <pathelement location="${prod.src}"/>
+				 <pathelement location="${prod.libs.dir}/gxt.jar"/>
+				 <pathelement location="lib/gwt-dev.jar"/>
+				 <pathelement location="lib/gwt-user.jar"/>
+				 <pathelement location="${prod.libs.dir}/persistence-api-1.0.jar"/>
+			</classpath>
+			<arg value="-logLevel"/>
+			<arg value="INFO"/>
+			<arg value="-style"/>
+			<!--<arg value="PRETTY"/>-->
+			<arg value="OBF"/> 
+			<jvmarg value="-Xmx256M" />
+			<arg value="com.moogu.myweb.mywebapp" />
+		</java>
+	</target>
+	
+	<target name="run-sqlplus" depends="compile_test">
+		<java failonerror="true" classname="com.fortis.be.ilms.test.common.SqlScriptRunner">
+			<classpath refid="test.classpath"/>
+			<arg value="${sql.dir}"/>
+		</java>
+	</target>
+	
+	<target name="test" depends="run-sqlplus">
+		<mkdir dir="${test.reports.dir}"/>
+		<junit printsummary="true" haltonfailure="false" haltonerror="true" fork="true" failureproperty="test.failures" clonevm="true" dir="dist">	
+			<assertions>
+				<enable/>
+			</assertions>
+			<classpath refid="test.classpath"/>
+		    <formatter type="brief" usefile="false" />
+			<formatter type="xml"/>
+			<batchtest todir="${test.reports.dir}"  >
+				<fileset dir="${test.classes.dist}" >
+					<include name="**/*Test.class" />	
+					<exclude name="**/Abstract*Test.class"/>
+				</fileset>				
+			</batchtest>
+		</junit>  
+	</target>
+	
+	<target name="war" depends="gwtc">
+		<mkdir dir="${war.dir}"/>
+		<copy todir="${war.dir}">
+		    <fileset dir="war">
+		    	<exclude name="WEB-INF/classes/**/*"/>
+		    </fileset>
+		</copy>
+		
+		<delete dir="${war.dir}/WEB-INF/classes" includeemptydirs="true"/>
+		
+		<replace file="${war.dir}/version.txt" token="build_label" value="${build.label}"/>
+		<echo message="Building war with build label ${build.label}"/>
+		<copy todir="${war.dir}/WEB-INF" overwrite="true">
+			<fileset file="config/environment/REMOTE/web.xml"/>
+			<fileset file="config/ibm-web-bnd.xmi"/>
+			<fileset file="config/ibm-web-ext.xmi"/>
+		</copy>
+		
+		<copy todir="${war.dir}/WEB-INF/classes" overwrite="true">
+			<fileset dir="${prod.classes.dist}"/>
+		</copy>
+	    <delete file="${war.dir}/WEB-INF/classes/applicationContext-database.xml"/>
+		<copy todir="${war.dir}/WEB-INF/classes" overwrite="true">
+			<fileset file="config/environment/REMOTE/log4j.properties"/>
+			<fileset file="config/environment/REMOTE/jdbc.properties"/>
+			<fileset file="config/environment/REMOTE/applicationContext-database.xml" />
+		</copy>
+		
+		<zip destfile="dist/ILMS-pa01.war" basedir="${war.dir}" />
+	</target>
+	
+	<target name="war-tomcat" depends="gwtc">
+			<mkdir dir="${war.dir}"/>
+			<copy todir="${war.dir}">
+			    <fileset dir="war">
+			    	<exclude name="WEB-INF/classes/**/*"/>
+			    </fileset>
+			</copy>
+			
+			<delete dir="${war.dir}/WEB-INF/classes" includeemptydirs="true"/>
+			<copy todir="${war.dir}/WEB-INF/classes" overwrite="true">
+				<fileset dir="${prod.classes.dist}"/>
+			</copy>
+			<copy todir="${war.dir}/WEB-INF/classes" overwrite="true">
+				<fileset file="config/environment/REMOTE/log4j.properties"/>
+			</copy>
+		    <replace file="${war.dir}/WEB-INF/classes/log4j.properties" >
+		    	<replacetoken><![CDATA[${LOG4J_LOGDIR}]]></replacetoken>
+		    	<replacevalue><![CDATA[C:]]></replacevalue>
+		    </replace>
+			
+			<zip destfile="dist/ILMS-pa01.war" basedir="${war.dir}" />
+	</target>
+</project>
