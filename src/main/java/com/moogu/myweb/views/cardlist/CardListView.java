@@ -27,6 +27,9 @@ import java.util.List;
 @JsModule("@vaadin/vaadin-lumo-styles/badge.js")
 public class CardListView extends Div implements AfterNavigationObserver {
 
+    public static final String SPACING = "spacing-s";
+    public static final String VAADIN = "vaadin";
+    public static final String POST = "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).";
     Grid<PersonCard> grid = new Grid<>();
 
     public CardListView() {
@@ -35,7 +38,7 @@ public class CardListView extends Div implements AfterNavigationObserver {
         setSizeFull();
         grid.setHeight("100%");
         grid.addThemeVariants(GridVariant.LUMO_NO_BORDER, GridVariant.LUMO_NO_ROW_BORDERS);
-        grid.addComponentColumn(personCard -> createCard(personCard));
+        grid.addComponentColumn(this::createCard);
         add(grid);
     }
 
@@ -43,7 +46,7 @@ public class CardListView extends Div implements AfterNavigationObserver {
         HorizontalLayout card = new HorizontalLayout();
         card.addClassName("card");
         card.setSpacing(false);
-        card.getThemeList().add("spacing-s");
+        card.getThemeList().add(SPACING);
 
         Image image = new Image();
         image.setSrc(personCard.getImage());
@@ -55,7 +58,7 @@ public class CardListView extends Div implements AfterNavigationObserver {
         HorizontalLayout header = new HorizontalLayout();
         header.addClassName("header");
         header.setSpacing(false);
-        header.getThemeList().add("spacing-s");
+        header.getThemeList().add(SPACING);
 
         Span name = new Span(personCard.getName());
         name.addClassName("name");
@@ -69,15 +72,15 @@ public class CardListView extends Div implements AfterNavigationObserver {
         HorizontalLayout actions = new HorizontalLayout();
         actions.addClassName("actions");
         actions.setSpacing(false);
-        actions.getThemeList().add("spacing-s");
+        actions.getThemeList().add(SPACING);
 
-        IronIcon likeIcon = new IronIcon("vaadin", "heart");
+        IronIcon likeIcon = new IronIcon(VAADIN, "heart");
         Span likes = new Span(personCard.getLikes());
         likes.addClassName("likes");
-        IronIcon commentIcon = new IronIcon("vaadin", "comment");
+        IronIcon commentIcon = new IronIcon(VAADIN, "comment");
         Span comments = new Span(personCard.getComments());
         comments.addClassName("comments");
-        IronIcon shareIcon = new IronIcon("vaadin", "connect");
+        IronIcon shareIcon = new IronIcon(VAADIN, "connect");
         Span shares = new Span(personCard.getShares());
         shares.addClassName("shares");
 
@@ -93,15 +96,9 @@ public class CardListView extends Div implements AfterNavigationObserver {
 
         // Set some data when this view is displayed.
         List<PersonCard> personCards = Arrays.asList( //
-                createPerson("https://randomuser.me/api/portraits/men/42.jpg", "John Smith", "May 8",
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/women/42.jpg", "Abagail Libbie", "May 3",
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20"),
-                createPerson("https://randomuser.me/api/portraits/men/24.jpg", "Alberto Raya", "May 3",
-                        "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document without relying on meaningful content (also called greeking).",
-                        "1K", "500", "20")
+                createPerson("https://randomuser.me/api/portraits/men/42.jpg", "John Smith", "May 8", POST, "1K", "500", "20"),
+                createPerson("https://randomuser.me/api/portraits/women/42.jpg", "Abagail Libbie", "May 3", POST, "1K", "500", "20"),
+                createPerson("https://randomuser.me/api/portraits/men/24.jpg", "Alberto Raya", "May 3", POST, "1K", "500", "20")
         );
 
         grid.setItems(personCards);

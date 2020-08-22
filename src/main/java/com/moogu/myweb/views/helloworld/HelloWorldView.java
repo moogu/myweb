@@ -24,12 +24,12 @@ import com.vaadin.flow.router.Route;
 @CssImport("styles/views/helloworld/hello-world-view.css")
 public class HelloWorldView extends Div {
 
-    private TextField firstName = new TextField();
-    private TextField lastName = new TextField();
-    private TextField email = new TextField();
+    private final TextField firstName = new TextField();
+    private final TextField lastName = new TextField();
+    private final TextField email = new TextField();
 
-    private Button cancel = new Button("Cancel");
-    private Button save = new Button("Save");
+    private final Button cancel = new Button("Cancel");
+    private final Button save = new Button("Save");
 
     public HelloWorldView() {
         setId("hello-world-view");
@@ -46,9 +46,7 @@ public class HelloWorldView extends Div {
         binder.bindInstanceFields(this);
 
         cancel.addClickListener(e -> binder.readBean(null));
-        save.addClickListener(e -> {
-            Notification.show("Not implemented");
-        });
+        save.addClickListener(e -> Notification.show("Not implemented"));
 
         add(wrapper);
     }
@@ -69,8 +67,7 @@ public class HelloWorldView extends Div {
         FormLayout formLayout = new FormLayout();
         addFormItem(wrapper, formLayout, firstName, "First name");
         addFormItem(wrapper, formLayout, lastName, "Last name");
-        FormLayout.FormItem emailFormItem = addFormItem(wrapper, formLayout,
-                email, "Email");
+        FormLayout.FormItem emailFormItem = addFormItem(wrapper, formLayout, email, "Email");
         formLayout.setColspan(emailFormItem, 2);
     }
 
@@ -78,8 +75,7 @@ public class HelloWorldView extends Div {
         HorizontalLayout buttonLayout = new HorizontalLayout();
         buttonLayout.addClassName("button-layout");
         buttonLayout.setWidthFull();
-        buttonLayout
-                .setJustifyContentMode(FlexComponent.JustifyContentMode.END);
+        buttonLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.END);
         cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
         save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
         buttonLayout.add(cancel);
@@ -87,12 +83,10 @@ public class HelloWorldView extends Div {
         wrapper.add(buttonLayout);
     }
 
-    private FormLayout.FormItem addFormItem(VerticalLayout wrapper,
-                                            FormLayout formLayout, Component field, String fieldName) {
+    private FormLayout.FormItem addFormItem(VerticalLayout wrapper, FormLayout formLayout, Component field, String fieldName) {
         FormLayout.FormItem formItem = formLayout.addFormItem(field, fieldName);
         wrapper.add(formLayout);
         field.getElement().getClassList().add("full-width");
         return formItem;
     }
-
 }
