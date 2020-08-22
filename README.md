@@ -20,15 +20,6 @@ Clicking on the green run button will start the application.
 
 After the application has started, you can view your it at http://localhost:8080/ in your browser.
 
-#### Eclipse
-- Right click on a project folder and select `Run As` --> `Maven build..` . After that a configuration window is opened.
-- In the window set the value of the **Goals** field to `spring-boot:run` 
-- You can optionally select `Skip tests` checkbox
-- All the other settings can be left to default
-
-Once configurations are set clicking `Run` will start the application
-
-
 ## Project structure
 
 - `MainView.java` in `src/main/java` contains the navigation setup. It uses [App Layout](https://vaadin.com/components/vaadin-app-layout).
