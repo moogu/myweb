@@ -1,4 +1,5 @@
-[![Build Status](https://travis-ci.org/moogu/myweb.svg?branch=master)](https://travis-ci.org/moogu/myweb)
+[![Build Status](https://travis-ci.org/moogu/myweb.svg?branch=master)](https://travis-ci.org/moogu/myweb)   
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=moogu_myweb&metric=alert_status)](https://sonarcloud.io/dashboard?id=moogu_myweb)
 
 # myWeb
 
