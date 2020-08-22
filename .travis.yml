@@ -4,7 +4,5 @@ jdk:
 addons:
   sonarcloud:
     organization: "moogu"
-    token:
-      secure: $SONAR_TOKEN
 script:
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=moogu_myweb
