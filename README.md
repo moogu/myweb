@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/moogu/myweb.svg?branch=master)](https://travis-ci.org/moogu/myweb)
+
 # myWeb
 
 This is an example project that can be used as a starting point to create your own Vaadin application with Spring Boot.
