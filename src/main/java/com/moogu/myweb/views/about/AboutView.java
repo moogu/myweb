@@ -17,8 +17,8 @@ import com.vaadin.flow.router.RouteAlias;import com.moogu.myweb.views.main.MainV
 @CssImport("styles/views/about/about-view.css")
 public class AboutView extends HorizontalLayout {
 
-    private TextField name;
-    private Button sayHello;
+    private final TextField name;
+    private final Button sayHello;
 
     public AboutView() {
         setId("about-view");

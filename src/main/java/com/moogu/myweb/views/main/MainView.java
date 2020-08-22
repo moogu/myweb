@@ -1,15 +1,15 @@
 package com.moogu.myweb.views.main;
 
-import java.util.Arrays;
-import java.util.Optional;
-
+import com.moogu.myweb.views.about.AboutView;
+import com.moogu.myweb.views.cardlist.CardListView;
+import com.moogu.myweb.views.helloworld.HelloWorldView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.dependency.CssImport;
 import com.vaadin.flow.component.dependency.JsModule;
-import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.H1;
+import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
@@ -19,15 +19,11 @@ import com.vaadin.flow.component.tabs.TabsVariant;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.RouteConfiguration;
 import com.vaadin.flow.router.RouterLink;
-import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.theme.lumo.Lumo;
 
-import com.moogu.myweb.views.main.MainView;
-import com.moogu.myweb.views.about.AboutView;
-import com.moogu.myweb.views.helloworld.HelloWorldView;
-import com.moogu.myweb.views.cardlist.CardListView;
-import com.moogu.myweb.views.masterdetail.MasterDetailView;
+import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -87,11 +83,10 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
-        RouterLink[] links = new RouterLink[] {
-            new RouterLink("About", AboutView.class),
-            new RouterLink("Hello World", HelloWorldView.class),
-            new RouterLink("Card List", CardListView.class),
-            new RouterLink("Master-Detail", MasterDetailView.class)
+        RouterLink[] links = new RouterLink[]{
+                new RouterLink("About", AboutView.class),
+                new RouterLink("Hello World", HelloWorldView.class),
+                new RouterLink("Card List", CardListView.class),
         };
         return Arrays.stream(links).map(MainView::createTab).toArray(Tab[]::new);
     }
@@ -115,15 +110,15 @@ public class MainView extends AppLayout {
 
     private Optional<Tab> getTabWithCurrentRoute() {
         String currentRoute = RouteConfiguration.forSessionScope()
-                .getUrl(getContent().getClass());
+                                                .getUrl(getContent().getClass());
         return menu.getChildren().filter(tab -> hasLink(tab, currentRoute))
-                .findFirst().map(Tab.class::cast);
+                   .findFirst().map(Tab.class::cast);
     }
 
     private boolean hasLink(Component tab, String currentRoute) {
         return tab.getChildren().filter(RouterLink.class::isInstance)
-                .map(RouterLink.class::cast).map(RouterLink::getHref)
-                .anyMatch(currentRoute::equals);
+                  .map(RouterLink.class::cast).map(RouterLink::getHref)
+                  .anyMatch(currentRoute::equals);
     }
 
     private String getCurrentPageTitle() {
