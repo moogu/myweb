@@ -2,7 +2,9 @@ package com.moogu.myweb.config;
 
 import com.github.mongobee.Mongobee;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+//@Configuration
 public class MongobeeConfig {
     @Bean
     public Mongobee mongobee() {
